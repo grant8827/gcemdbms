@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-zdk_gm_9vek_n8$o-68f*yyyn#22%1l$8g*1j_)$gf50de3)u%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://gcem.up.railway.app/', 'gcem.up.railway.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['https://gcemdbms-production.up.railway.app', 'gcemdbms-production.up.railway.app' ,'127.0.0.1']
 
 
 # Application definition
