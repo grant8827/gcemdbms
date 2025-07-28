@@ -1,0 +1,2 @@
+web: python manage.py migrate && gunicorn church_finance_project.wsgi
+web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn church_finance_project.wsgi
