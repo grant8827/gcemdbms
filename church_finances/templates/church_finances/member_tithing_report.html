@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ report_title }}</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            color: #333; 
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .church-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .report-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .report-date {
+            font-size: 12px;
+            color: #666;
+        }
+        .member-info {
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .member-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+        .member-info p {
+            margin: 5px 0;
+        }
+        .summary-box {
+            background-color: #e6f3ff;
+            border: 1px solid #b3d9ff;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .summary-box h3 {
+            margin: 0 0 10px 0;
+            color: #0066cc;
+        }
+        .total-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .amount {
+            text-align: right;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        .print-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .print-button:hover {
+            background-color: #0056b3;
+        }
+        @media print {
+            .print-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button" onclick="window.print()">Print Report</button>
+    
+    <div class="header">
+        <div class="church-name">Glory Carrier Evangelistic Ministries</div>
+        <div class="report-title">{{ report_title }}</div>
+        <div class="report-date">Generated on {{ print_date }}</div>
+    </div>
+
+    <div class="member-info">
+        <h3>Member Information</h3>
+        <p><strong>Name:</strong> {{ member.full_name }}</p>
+        <p><strong>Member Since:</strong> {{ member.member_since }}</p>
+        {% if member.email %}
+        <p><strong>Email:</strong> {{ member.email }}</p>
+        {% endif %}
+        {% if member.phone %}
+        <p><strong>Phone:</strong> {{ member.phone }}</p>
+        {% endif %}
+    </div>
+
+    <div class="summary-box">
+        <h3>Total Tithes{% if year %} for {{ year }}{% endif %}</h3>
+        <div class="total-amount">${{ total_amount|floatformat:2 }}</div>
+    </div>
+
+    {% if tithes %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Payment Method</th>
+                <th>Check Number</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tithe in tithes %}
+            <tr>
+                <td>{{ tithe.date }}</td>
+                <td class="amount">${{ tithe.amount }}</td>
+                <td>{{ tithe.get_payment_method_display }}</td>
+                <td>{{ tithe.check_number|default:"N/A" }}</td>
+                <td>{{ tithe.notes|default:"" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr style="font-weight: bold; background-color: #f2f2f2;">
+                <td>Total</td>
+                <td class="amount">${{ total_amount|floatformat:2 }}</td>
+                <td colspan="3"></td>
+            </tr>
+        </tfoot>
+    </table>
+    {% else %}
+    <p>No tithing records found for the selected period.</p>
+    {% endif %}
+
+    <div class="footer">
+        <p>This report was generated automatically by the Church Finance Management System.</p>
+        <p>For questions about this report, please contact the church office.</p>
+    </div>
+</body>
+</html>

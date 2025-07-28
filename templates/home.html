@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - Church Finance App{% endblock %}
+
+{% block content %}
+<div class="text-center py-12 bg-white rounded-xl shadow-lg">
+    <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Welcome to the Church Financial Documentation App</h1>
+    <p class="text-lg text-gray-700 mb-8">Your simple solution for managing church income and expenses.</p>
+    {% if not user.is_authenticated %}
+        <div class="space-x-4">
+            <a href="{% url 'login' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Login to Get Started
+            </a>
+            {%comment %}
+            <a href="{% url 'register' %}" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Register
+            </a>
+            {% endcomment %}
+        </div>
+    {% else %}
+        <p class="text-xl text-gray-800 mb-8">You are logged in as <span class="font-bold">{{ user.username }}</span>.</p>
+        <a href="{% url 'dashboard' %}" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+            Go to Dashboard
+        </a>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+
+

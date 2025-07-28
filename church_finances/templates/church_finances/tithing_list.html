@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Tithing Records{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Tithing Records</h1>
+        <div class="flex space-x-3">
+            <a href="{% url 'tithing_create' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+                Add New Tithe
+            </a>
+            <a href="{% url 'annual_tithing_summary' %}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
+                Annual Summary
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Form -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4">Filter Records</h3>
+        <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+                <label for="{{ filter_form.member.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Member
+                </label>
+                {{ filter_form.member }}
+            </div>
+            <div>
+                <label for="{{ filter_form.year.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Year
+                </label>
+                {{ filter_form.year }}
+            </div>
+            <div>
+                <label for="{{ filter_form.start_date.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Start Date
+                </label>
+                {{ filter_form.start_date }}
+            </div>
+            <div>
+                <label for="{{ filter_form.end_date.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    End Date
+                </label>
+                {{ filter_form.end_date }}
+            </div>
+            <div class="md:col-span-4">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md mr-2">
+                    Apply Filters
+                </button>
+                <a href="{% url 'tithing_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md">
+                    Clear Filters
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Summary -->
+    {% if total_amount %}
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <p class="text-blue-800 font-semibold">
+            Total Amount: ${{ total_amount|floatformat:2 }} ({{ tithes|length }} record{{ tithes|length|pluralize }})
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Tithing Records Table -->
+    {% if tithes %}
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <table class="min-w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Method</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Check #</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for tithe in tithes %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ tithe.date }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <a href="{% url 'member_detail' tithe.member.pk %}" class="text-blue-600 hover:text-blue-900">
+                                {{ tithe.member.full_name }}
+                            </a>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ tithe.amount }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ tithe.get_payment_method_display }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ tithe.check_number|default:"N/A" }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <a href="{% url 'tithing_update' tithe.pk %}" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
+                            <a href="{% url 'tithing_delete' tithe.pk %}" class="text-red-600 hover:text-red-900">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="text-center py-8">
+            <p class="text-gray-500">No tithing records found.</p>
+            <a href="{% url 'tithing_create' %}" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md inline-block">
+                Add First Tithe
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

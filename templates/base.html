@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Church Finance App{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1rem;
+        }
+        .messages li {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .messages .success {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+            border: 1px solid #34d399; /* green-400 */
+        }
+        .messages .error {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+            border: 1px solid #f87171; /* red-400 */
+        }
+        .messages .info {
+            background-color: #e0f2fe; /* blue-100 */
+            color: #1e40af; /* blue-800 */
+            border: 1px solid #60a5fa; /* blue-400 */
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <nav class="bg-blue-700 p-4 shadow-md">
+        <div class="container mx-auto">
+            <div class="flex justify-between items-center">
+                <a href="{% url 'home' %}" class="text-white text-2xl font-bold rounded-md px-3 py-1 hover:bg-blue-600 transition-colors">
+                    G.C.E.M DataBase
+                </a>
+                <!-- Mobile menu button -->
+                <button id="mobile-menu-button" class="md:hidden text-white hover:text-blue-200 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path class="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        <path class="close-icon hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <!-- Desktop menu -->
+                <div class="hidden md:flex md:items-center md:space-x-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="text-white hover:text-blue-200 rounded-md px-3 py-1 hover:bg-blue-600 transition-colors">Dashboard</a>
+                        <a href="{% url 'transaction_list' %}" class="text-white hover:text-blue-200 rounded-md px-3 py-1 hover:bg-blue-600 transition-colors">Transactions</a>
+                        <a href="{% url 'member_list' %}" class="text-white hover:text-blue-200 rounded-md px-3 py-1 hover:bg-blue-600 transition-colors">Members</a>
+                        <a href="{% url 'tithing_list' %}" class="text-white hover:text-blue-200 rounded-md px-3 py-1 hover:bg-blue-600 transition-colors">Tithes</a>
+                        <span class="text-blue-200">Hello, {{ user.username }}!</span>
+                        <a href="{% url 'logout' %}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">Logout</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">Login</a>
+                        <!-- <a href="{% url 'register' %}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">Register</a> -->
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden mt-4 md:hidden">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="block text-white hover:text-blue-200 rounded-md px-3 py-2 hover:bg-blue-600 transition-colors">Dashboard</a>
+                    <a href="{% url 'transaction_list' %}" class="block text-white hover:text-blue-200 rounded-md px-3 py-2 hover:bg-blue-600 transition-colors">Transactions</a>
+                    <a href="{% url 'member_list' %}" class="block text-white hover:text-blue-200 rounded-md px-3 py-2 hover:bg-blue-600 transition-colors">Members</a>
+                    <a href="{% url 'tithing_list' %}" class="block text-white hover:text-blue-200 rounded-md px-3 py-2 hover:bg-blue-600 transition-colors">Tithes</a>
+                    <span class="block text-blue-200 px-3 py-2">Hello, {{ user.username }}!</span>
+                    <a href="{% url 'logout' %}" class="block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 mx-3 my-2 rounded-lg shadow-md transition duration-300 ease-in-out">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="block bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 mx-3 my-2 rounded-lg shadow-md transition duration-300 ease-in-out">Login</a>
+                    <!-- <a href="{% url 'register' %}" class="block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 mx-3 my-2 rounded-lg shadow-md transition duration-300 ease-in-out">Register</a> -->
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto p-6">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center mt-auto">
+        <div class="container mx-auto">
+            &copy; 2025 Church Finance App. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = mobileMenuButton.querySelector('.menu-icon');
+        const closeIcon = mobileMenuButton.querySelector('.close-icon');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when window is resized to desktop size
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // 768px is the md breakpoint in Tailwind
+                mobileMenu.classList.add('hidden');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

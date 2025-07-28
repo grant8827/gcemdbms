@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annual Tithing Summary {{ year }}</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            color: #333; 
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .church-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .report-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .report-date {
+            font-size: 12px;
+            color: #666;
+        }
+        .summary-box {
+            background-color: #e6f3ff;
+            border: 1px solid #b3d9ff;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .summary-box h3 {
+            margin: 0 0 10px 0;
+            color: #0066cc;
+        }
+        .total-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .amount {
+            text-align: right;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+        .print-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .print-button:hover {
+            background-color: #0056b3;
+        }
+        .year-selector {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .year-selector a {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 0 5px;
+            background-color: #f8f9fa;
+            color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+        .year-selector a:hover {
+            background-color: #e9ecef;
+        }
+        @media print {
+            .print-button, .year-selector {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-button" onclick="window.print()">Print Report</button>
+    
+    <div class="year-selector">
+        <strong>Select Year:</strong>
+        <a href="?year=2020">2020</a>
+        <a href="?year=2021">2021</a>
+        <a href="?year=2022">2022</a>
+        <a href="?year=2023">2023</a>
+        <a href="?year=2024">2024</a>
+        <a href="?year=2025">2025</a>
+    </div>
+
+    <div class="header">
+        <div class="church-name">Glory Carrier Evangelistic Ministries</div>
+        <div class="report-title">Annual Tithing Summary - {{ year }}</div>
+        <div class="report-date">Generated on {{ print_date }}</div>
+    </div>
+
+    <div class="summary-box">
+        <h3>Total Tithes for {{ year }}</h3>
+        <div class="total-amount">${{ grand_total|floatformat:2 }}</div>
+        <p>{{ member_summaries|length }} member{{ member_summaries|length|pluralize }} contributed</p>
+    </div>
+
+    {% if member_summaries %}
+    <table>
+        <thead>
+            <tr>
+                <th>Member Name</th>
+                <th>Total Tithes</th>
+                <th>Percentage of Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for summary in member_summaries %}
+            <tr>
+                <td>{{ summary.member.full_name }}</td>
+                <td class="amount">${{ summary.total|floatformat:2 }}</td>
+                <td class="amount">{% widthratio summary.total grand_total 100 %}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr style="font-weight: bold; background-color: #f2f2f2;">
+                <td>Total</td>
+                <td class="amount">${{ grand_total|floatformat:2 }}</td>
+                <td class="amount">100%</td>
+            </tr>
+        </tfoot>
+    </table>
+    {% else %}
+    <p>No tithing records found for {{ year }}.</p>
+    {% endif %}
+
+    <div class="footer">
+        <p>This report was generated automatically by the Church Finance Management System.</p>
+        <p>For questions about this report, please contact the church office.</p>
+        <p><strong>Confidential:</strong> This report contains sensitive financial information and should be handled accordingly.</p>
+    </div>
+</body>
+</html>

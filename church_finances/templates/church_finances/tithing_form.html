@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto">
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ title }}</h1>
+            
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                
+                <div>
+                    <label for="{{ form.member.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        {{ form.member.label }}
+                    </label>
+                    {{ form.member }}
+                    {% if form.member.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ form.member.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.date.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        {{ form.date.label }}
+                    </label>
+                    {{ form.date }}
+                    {% if form.date.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ form.date.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.amount.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        {{ form.amount.label }}
+                    </label>
+                    {{ form.amount }}
+                    {% if form.amount.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ form.amount.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.payment_method.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        {{ form.payment_method.label }}
+                    </label>
+                    {{ form.payment_method }}
+                    {% if form.payment_method.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ form.payment_method.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.check_number.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        {{ form.check_number.label }}
+                    </label>
+                    {{ form.check_number }}
+                    {% if form.check_number.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ form.check_number.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.notes.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        {{ form.notes.label }}
+                    </label>
+                    {{ form.notes }}
+                    {% if form.notes.errors %}
+                        <div class="text-red-600 text-sm mt-1">{{ form.notes.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="flex space-x-4">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+                        Save Tithe
+                    </button>
+                    <a href="{% url 'tithing_list' %}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

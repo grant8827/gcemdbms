@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Church Finance App{% endblock %}
+
+{% block content %}
+<div class="bg-white p-8 rounded-xl shadow-lg mb-6">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Financial Dashboard</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-green-100 p-6 rounded-lg shadow-md border border-green-200 text-center">
+            <h3 class="text-xl font-semibold text-green-800 mb-2">Total Income</h3>
+            <p class="text-4xl font-bold text-green-700">${{ total_income|floatformat:2 }}</p>
+        </div>
+        <div class="bg-red-100 p-6 rounded-lg shadow-md border border-red-200 text-center">
+            <h3 class="text-xl font-semibold text-red-800 mb-2">Total Expenses</h3>
+            <p class="text-4xl font-bold text-red-700">${{ total_expense|floatformat:2 }}</p>
+        </div>
+        <div class="bg-blue-100 p-6 rounded-lg shadow-md border border-blue-200 text-center">
+            <h3 class="text-xl font-semibold text-blue-800 mb-2">Net Balance</h3>
+            <p class="text-4xl font-bold text-blue-700">${{ net_balance|floatformat:2 }}</p>
+        </div>
+    </div>
+
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">Recent Transactions</h3>
+    {% if recent_transactions %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider rounded-tl-lg">Date</th>
+                        <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Type</th>
+                        <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Category</th>
+                        <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
+                        <th class="py-3 px-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider rounded-tr-lg">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in recent_transactions %}
+                        <tr class="border-t border-gray-200 hover:bg-gray-50 transition-colors">
+                            <td class="py-3 px-4 text-sm text-gray-700">{{ transaction.date|date:"M d, Y" }}</td>
+                            <td class="py-3 px-4 text-sm font-medium {% if transaction.type == 'income' %}text-green-600{% else %}text-red-600{% endif %}">
+                                {{ transaction.get_type_display }}
+                            </td>
+                            <td class="py-3 px-4 text-sm text-gray-700">{{ transaction.get_category_display }}</td>
+                            <td class="py-3 px-4 text-sm text-gray-700">${{ transaction.amount|floatformat:2 }}</td>
+                            <td class="py-3 px-4 text-sm text-gray-700">{{ transaction.description|default:"-" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-center text-gray-600 p-4 bg-gray-50 rounded-lg border border-gray-200">No recent transactions to display. Add some to see them here!</p>
+    {% endif %}
+
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+        <a href="{% url 'transaction_create' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+            Add New Transaction
+        </a>
+        <a href="{% url 'member_list' %}" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+            Manage Members
+        </a>
+        <a href="{% url 'tithing_list' %}" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+            Manage Tithes
+        </a>
+    </div>
+
+    <div class="bg-gray-100 mt-[80px] w-full items-center justify-center p-8 rounded-xl shadow-lg mb-6">
+        <div class="text-center">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="{% url 'register' %}" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                    Register New User
+                </a>
+                <a href="{% url 'tithing_create' %}" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                    Add New Tithe
+                </a>
+                <a href="{% url 'annual_tithing_summary' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                    Annual Report
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
