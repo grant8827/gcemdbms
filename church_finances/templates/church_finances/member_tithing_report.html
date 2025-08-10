@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,6 +98,11 @@
         .print-button:hover {
             background-color: #0056b3;
         }
+        .logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
         @media print {
             .print-button {
                 display: none;
@@ -107,6 +114,7 @@
     <button class="print-button" onclick="window.print()">Print Report</button>
     
     <div class="header">
+        <img src="{% static 'images/logo.png' %}" alt="GCEM" class="logo" onerror="this.style.display='none'">
         <div class="church-name">Glory Carrier Evangelistic Ministries</div>
         <div class="report-title">{{ report_title }}</div>
         <div class="report-date">Generated on {{ print_date }}</div>
