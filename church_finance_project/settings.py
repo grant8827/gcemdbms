@@ -29,7 +29,20 @@ SECRET_KEY = "django-insecure-zdk_gm_9vek_n8$o-68f*yyyn#22%1l$8g*1j_)$gf50de3)u%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://gcemdbms-production.up.railway.app', 'gcemdbms-production.up.railway.app' ,'127.0.0.1']
+ALLOWED_HOSTS = [
+    'gcemdbms-production.up.railway.app', 
+    'gcemdbms.com',
+    '127.0.0.1',
+    'localhost'
+]
+
+# CSRF trusted origins for production
+CSRF_TRUSTED_ORIGINS = [
+    'https://gcemdbms-production.up.railway.app',
+    'https://gcemdbms.com',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000'
+]
 
 
 # Application definition
@@ -148,7 +161,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
